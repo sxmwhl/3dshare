@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="formbox">
-    	<form name="mform" method="post" action="{#$fileurl#}">
+    	<form name="mform" method="post" action="save">
         <table width="100%" border="0" cellspacing="1" cellpadding="0">
 			<tr>
 				<th>所属分类：</th>
@@ -36,8 +36,8 @@
 			<tr class="btnbox">
             	<td>&nbsp;</td>
 				<td>
-					<input type="submit" class="btn" value="保 存">&nbsp;
-					<input type="reset" class="btn" value="取 消" onClick="window.location.href='{#$fileurl#}';">
+					<input type="submit" class="btn" value="保 存"/>&nbsp;
+					<input type="reset" class="btn" value="取 消"/>
 				</td>
 			</tr>
 		</table>

@@ -3,23 +3,112 @@ namespace Home\Model;
 use Think\Model;
 class CategoryModel extends Model {
 	protected $tablePrefix = 'think_';
+	public $pi=3.14;
+	public $Category;
 	//自动验证
-	protected $_validate    =   array(
-			array('cate_name','request'),
-			array('cate_dir','request'),
+	protected $_validate = array(
+			array('cate_name','require','请为分类命名！'),
+			array('cate_dir','require','请为分配分类目录'),
 	);
-	/* 定义自动完成
+	/*定义自动完成
 	protected $_auto    =   array(
-			array('title','未命名',1),
-			array('description','尚无描述',1),
-			array('category','0',1),
-			array('creator','佚名',1),
-			array('sign','0',1),
-			array('views','1',1),			
-			array('hl_on','1',1),
-			array('dl_on','0',1),			
-			array('vp_position','0,0,10',1),
-			array('vp_orientation','0,0,0,1',1),
+			array('cate_arrparentid','',1),
+			array('cate_arrchildid','',1),
+			array('cate_childcount','0',1),
 
 	);*/
+	public function  sayhello(){
+		echo "hello";
+	}
+	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {
+		$Category=M('Category','think_');
+		$categories = $Category->where('root_id='.$root_id)->order('cate_order ASC,cate_id ASC')->select();
+		$optstr = '';
+		foreach ($categories as $cate) {
+			$optstr .= '<option value="'.$cate['cate_id'].'"';
+			if ($cate_id > 0 && $cate_id == $cate['cate_id']) $optstr .= ' selected';
+	
+			if ($level_id == 0) {
+				$optstr .= ' style="background: #EEF3F7;">';
+				$optstr .= '├'.$cate['cate_name'];
+			} else {
+				$optstr .= '>';
+				for ($i = 2; $i <= $level_id; $i++) {
+					$optstr .= '│&nbsp;&nbsp;';
+				}
+				$optstr .= '│&nbsp;&nbsp;├'.$cate['cate_name'];
+			}
+			$optstr .= '</option>';
+			$optstr .= $this->get_category_option($cate['cate_id'], $cate_id, $level_id + 1);
+		}
+		unset($categories);
+		return $optstr;
+	}
+	function get_category_parent_ids($cate_id) {
+		$Category=M('Category','think_');
+		$ids = $Category->where('cate_id='.$cate_id)->field('root_id')->select();
+		//$sql = "SELECT root_id FROM ".$DB->table('categories')." WHERE cate_id='$cate_id'";
+		//$ids = $DB->fetch_all($sql);
+	
+		$idstr = '';
+		if (!empty($ids) && is_array($ids)) {
+			foreach ($ids as $id) {
+				if ($id['root_id'] > 0) {
+					$idstr .= $this->get_category_parent_ids($id['root_id']);
+					$idstr .= ','.$id['root_id'];
+				} else {
+					$idstr = '0';
+				}
+			}
+		}
+	
+		return $idstr;
+	}
+	 
+	function get_category_child_ids($cate_id) {
+		$Category=M('Category','think_');
+		$ids = $Category->where('root_id='.$cate_id)->field('cate_id')->select();
+	
+		//$sql = "SELECT cate_id FROM ".$DB->table('categories')." WHERE root_id=$cate_id";
+		//$ids = $DB->fetch_all($sql);
+		$idstr = '';
+		foreach ($ids as $id) {
+			$idstr .= ','.$id['cate_id'];
+			$idstr .= $this->get_category_child_ids($id['cate_id']);
+		}
+		unset($ids);
+	
+		return $idstr;
+	}
+	function get_category_count($cate_id = 0) {
+		$Category=M('Category','think_');
+			
+		if ($cate_id > 0) $rows = $Category->where('root_id='.$cate_id)->field('cate_id')->select();
+		$count = count($rows);
+	
+		return $count;
+	}
+	function update_categories() {
+		$Category=D('Category');
+		$cate_ids = $Category->field('cate_id')->order('cate_id ASC')->select();
+		//$sql = "SELECT cate_id FROM $table ORDER BY cate_id ASC";
+		//$cate_ids = $DB->fetch_all($sql);
+		echo $count = count($cate_ids);
+		foreach ($cate_ids as $id) {
+			$data['cate_arrparentid'] = $this->get_category_parent_ids($id['cate_id']);
+			$data['cate_arrchildid'] = $id['cate_id'].$this->get_category_child_ids($id['cate_id']);
+			$data['cate_childcount'] = $this->get_category_count($id['cate_id']);
+			if (!$Category->create($data,2)){ // 创建数据对象
+				// 如果创建失败 表示验证没有通过 输出错误提示信息
+				exit($Category->getError());
+			}else{
+				// 验证通过 写入新增数据
+				//echo $Moxing->title;
+				$where="cate_id='".$id['cate_id']."'";
+				$Category->where($where)->save();
+				 
+				 
+			}
+		}
+	}
 }
