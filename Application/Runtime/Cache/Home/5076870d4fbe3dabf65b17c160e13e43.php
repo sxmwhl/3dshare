@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="formbox">
-    	<form name="mform" method="post" action="save">
+    	<form name="mform" method="post" action="/index.php/Home/Category/save">
         <table width="100%" border="0" cellspacing="1" cellpadding="0">
 			<tr>
 				<th>所属分类：</th>

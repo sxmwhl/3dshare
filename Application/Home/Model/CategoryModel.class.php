@@ -17,17 +17,18 @@ class CategoryModel extends Model {
 			array('cate_childcount','0',1),
 
 	);*/
-	public function  sayhello(){
-		echo "hello";
+	public function  __construct(){
+		parent::__construct();
+		$this->Category=M('Category','think_');
 	}
-	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {
-		$Category=M('Category','think_');
-		$categories = $Category->where('root_id='.$root_id)->order('cate_order ASC,cate_id ASC')->select();
+	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {		
+		$categories = $this->Category->where('root_id='.$root_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
+		//$sql = "SELECT cate_id, cate_name FROM ".$DB->table('categories')." WHERE root_id=$root_id ORDER BY cate_order ASC, cate_id ASC";
+		//$categories = $DB->fetch_all($sql);
 		$optstr = '';
 		foreach ($categories as $cate) {
 			$optstr .= '<option value="'.$cate['cate_id'].'"';
-			if ($cate_id > 0 && $cate_id == $cate['cate_id']) $optstr .= ' selected';
-	
+			if ($cate_id > 0 && $cate_id == $cate['cate_id']) $optstr .= ' selected';	
 			if ($level_id == 0) {
 				$optstr .= ' style="background: #EEF3F7;">';
 				$optstr .= '├'.$cate['cate_name'];
@@ -45,11 +46,9 @@ class CategoryModel extends Model {
 		return $optstr;
 	}
 	function get_category_parent_ids($cate_id) {
-		$Category=M('Category','think_');
-		$ids = $Category->where('cate_id='.$cate_id)->field('root_id')->select();
+		$ids = $this->Category->where('cate_id='.$cate_id)->field('root_id')->select();
 		//$sql = "SELECT root_id FROM ".$DB->table('categories')." WHERE cate_id='$cate_id'";
-		//$ids = $DB->fetch_all($sql);
-	
+		//$ids = $DB->fetch_all($sql);	
 		$idstr = '';
 		if (!empty($ids) && is_array($ids)) {
 			foreach ($ids as $id) {
@@ -60,15 +59,12 @@ class CategoryModel extends Model {
 					$idstr = '0';
 				}
 			}
-		}
-	
+		}	
 		return $idstr;
 	}
 	 
 	function get_category_child_ids($cate_id) {
-		$Category=M('Category','think_');
-		$ids = $Category->where('root_id='.$cate_id)->field('cate_id')->select();
-	
+		$ids = $this->Category->where('root_id='.$cate_id)->field('cate_id')->select();	
 		//$sql = "SELECT cate_id FROM ".$DB->table('categories')." WHERE root_id=$cate_id";
 		//$ids = $DB->fetch_all($sql);
 		$idstr = '';
@@ -76,16 +72,13 @@ class CategoryModel extends Model {
 			$idstr .= ','.$id['cate_id'];
 			$idstr .= $this->get_category_child_ids($id['cate_id']);
 		}
-		unset($ids);
-	
+		unset($ids);	
 		return $idstr;
 	}
 	function get_category_count($cate_id = 0) {
-		$Category=M('Category','think_');
 			
-		if ($cate_id > 0) $rows = $Category->where('root_id='.$cate_id)->field('cate_id')->select();
-		$count = count($rows);
-	
+		if ($cate_id > 0) $rows = $this->Category->where('root_id='.$cate_id)->field('cate_id')->select();
+		$count = count($rows);	
 		return $count;
 	}
 	function update_categories() {
@@ -105,9 +98,7 @@ class CategoryModel extends Model {
 				// 验证通过 写入新增数据
 				//echo $Moxing->title;
 				$where="cate_id='".$id['cate_id']."'";
-				$Category->where($where)->save();
-				 
-				 
+				$Category->where($where)->save();				 
 			}
 		}
 	}
