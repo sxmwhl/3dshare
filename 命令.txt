@@ -1,0 +1,3 @@
+git log 查看commit    
+git reset --hard <commit_id> //删除命令
+git push origin HEAD --force //强制push

@@ -84,7 +84,10 @@ class FormController extends Controller {
     	{
     		$this->display("Public:404");
     		exit();
-    	} 	
+    	}
+    	$Category=D('Category');
+    	$category_option = $Category->get_category_option(0, 0, 0);
+    	$this->category_option=$category_option;
     	$Moxing=M('Moxing','think_');
     	$where="folder='".$md5."'";
     	$model_show=$Moxing->where($where)->find();

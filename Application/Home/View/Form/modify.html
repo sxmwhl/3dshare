@@ -114,13 +114,9 @@
 
 
 				<h2>模型分类*：</h2>
-				<select name="category1" id="category1">
-					<option value="0" selected="selected">动物</option>
-					<option value="1">植物</option>
-				</select>
-				<select name="category2" id="category2">
-					<option value="0">牛</option>
-					<option value="1">猪</option>
+				<select name="category" id="category">
+				<option value="0">请选择分类</option>
+					{$category_option}
 				</select>
 				<input type="hidden" name="preview_ext" value="{$model.preview_ext}" />
 				<input type="hidden" name="folder" value="{$model.folder}" /> 

@@ -21,6 +21,15 @@ class CategoryModel extends Model {
 		parent::__construct();
 		$this->Category=M('Category','think_');
 	}
+	function get_categories($cate_id=0){
+		$categories = $this->Category->where('root_id='.$cate_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
+		return $categories;
+	}
+	function get_category_moxings($cate_id=0){
+		$Moxing=M('Moxing','think_');
+		$moxings=$Moxing->where('category='.$cate_id)->order('views ASC')->select();
+		return $moxings;
+	}
 	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {		
 		$categories = $this->Category->where('root_id='.$root_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
 		//$sql = "SELECT cate_id, cate_name FROM ".$DB->table('categories')." WHERE root_id=$root_id ORDER BY cate_order ASC, cate_id ASC";
