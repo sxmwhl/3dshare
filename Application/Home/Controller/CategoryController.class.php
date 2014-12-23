@@ -3,12 +3,18 @@ namespace Home\Controller;
 use Think\Controller;
 class CategoryController extends Controller {	
     public function index(){
-    	$root_id=I('c');
-    	if(empty($root_id))$root_id=0;
-    	$Category=M('Category','think_');
-    	$list = $Category->where('root_id='.$root_id)->order('cate_order')->select();
-    	$this->list=$list;
-    	//echo $Moxing->getLastSql();
+    	$cate_id=I('cate');
+    	if(empty($cate_id))$cate_id=0;
+    	$Category=D('Category');
+    	$category_path=$Category->get_category_path($cate_id);
+    	$this->category_path=$category_path;
+    	echo $Category->getLastSql();
+    	$categories = $Category->get_categories($cate_id);
+    	$this->categories=$categories;
+    	$Moxing=D('Moxing');
+    	$moxings = $Moxing->get_category_moxings($cate_id);
+    	$this->moxings=$moxings;
+    	
     	$this->display();
     }
     public function add(){

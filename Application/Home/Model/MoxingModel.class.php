@@ -3,6 +3,7 @@ namespace Home\Model;
 use Think\Model;
 class MoxingModel extends Model {
 	protected $tablePrefix = 'think_';
+	public $Moxing;
 	//自动验证
 	protected $_validate    =   array(
 			array('title',array('未命名',''),'请为模型命名！',1,'notin',2),
@@ -22,4 +23,12 @@ class MoxingModel extends Model {
 			array('vp_orientation','0,0,0,1',1),
 
 	);
+	public function  __construct(){
+		parent::__construct();
+		$this->Moxing=M('Moxing','think_');
+	}
+	function get_category_moxings($cate_id=0){
+		$moxings=$this->Moxing->where('category='.$cate_id)->field('*')->order('views')->select();
+		return $moxings;
+	}
 }

@@ -3,7 +3,6 @@ namespace Home\Model;
 use Think\Model;
 class CategoryModel extends Model {
 	protected $tablePrefix = 'think_';
-	public $pi=3.14;
 	public $Category;
 	//自动验证
 	protected $_validate = array(
@@ -21,14 +20,23 @@ class CategoryModel extends Model {
 		parent::__construct();
 		$this->Category=M('Category','think_');
 	}
+	function get_one_category($cate_id = 0) {
+		$row=$this->Category->where("cate_id=".$cate_id)->find();	
+		
+		//$row = load_cache('category_'.$cate_id) ? load_cache('category_'.$cate_id) : $DB->fetch_one("SELECT cate_id, root_id, cate_name, cate_dir, cate_arrparentid, cate_arrchildid, cate_childcount, cate_postcount FROM ".$DB->table('categories')." WHERE cate_id=$cate_id LIMIT 1");
+	    return $row;
+	}
+	function get_category_path($cate_id = 0, $separator = ' &raquo; ') {	
+		$cate = $this->get_one_category($cate_id);
+		if (!isset($cate)) return '';
+		$category_path=$this->Category->where("cate_id IN (".$cate_id.",".$cate['cate_arrparentid'].")")->field('cate_id,cate_name')->select();	
+		//$sql = "SELECT cate_id, cate_name FROM ".$DB->table('categories')." WHERE cate_id IN (".$cate_id.','.$cate['cate_arrparentid'].")";
+		//$categories = $DB->fetch_all($sql);
+		return $category_path;
+	}
 	function get_categories($cate_id=0){
 		$categories = $this->Category->where('root_id='.$cate_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
 		return $categories;
-	}
-	function get_category_moxings($cate_id=0){
-		$Moxing=M('Moxing','think_');
-		$moxings=$Moxing->where('category='.$cate_id)->order('views ASC')->select();
-		return $moxings;
 	}
 	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {		
 		$categories = $this->Category->where('root_id='.$root_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
