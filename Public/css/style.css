@@ -66,6 +66,8 @@ body{
 
 .carousel {
 	padding-bottom: 10px;
+	font-size: 20px;
+	color: #ff8000;
 }
 .carousel .item {
 	margin-right: 31px;
@@ -189,7 +191,7 @@ body{
 	top: 35%;
 }
 .content{
-	text-align:center;
+	text-align:left;
 	margin:10px 0;
 }
 .content-text h2{
@@ -197,6 +199,12 @@ body{
 	color:#fff;
 	padding:20px;
 	background-image: url(../images/bg8.jpg);
+}
+.content-text a{
+	color:#fff;
+}
+.content-text a:hover {
+	color: #666633;
 }
 .footer {
 	margin: 10px 0;
@@ -331,6 +339,13 @@ div.InfoOrange {
 div.InfoDesc {
 	font-weight: bolder;
 	color: #FFF;
+}
+
+div.InfoDesc a{
+	color: #FFF;
+}
+div.InfoDesc a:hover{
+	color: #808040;
 }
 
 div.InfoValue {

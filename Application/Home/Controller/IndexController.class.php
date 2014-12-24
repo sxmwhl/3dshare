@@ -25,6 +25,11 @@ class IndexController extends Controller {
     	$where="folder='".$md5."'";
     	$data=$Moxing->where($where)->find();
     	$this->assign('model',$data);
+    	$Category=D('Category');
+    	$category_path=$Category->get_category_path($data['category']);
+    	$this->category_path=$category_path;
+    	$root_category=$Category->get_categories(0);
+    	$this->categories=$root_category;
     	//echo $Moxing->getLastSql();
     	$this->display('model');
     }
@@ -43,5 +48,18 @@ class IndexController extends Controller {
     	$this->assign('model',$data);
     	//echo $Moxing->getLastSql();
     	$this->display('modelIn');
+    }
+    public function search(){
+    	$Category=D('Category');
+    	$list3=$Category->get_categories(0);
+    	$this->categories=$list3;
+    	$Moxing=M('Moxing','think_');
+    	$keywords=I('keywords');
+    	$map['_string'] = "concat (title,description) like '%".$keywords."%'";
+    	$list = $Moxing->where($map)->select();
+    	$this->assign('model',$list);
+    	$this->assign('keywords',$keywords);
+    	//echo $Moxing->getLastSql();
+    	$this->display('search');
     }
 }

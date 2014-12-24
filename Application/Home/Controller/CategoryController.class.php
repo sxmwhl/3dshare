@@ -8,7 +8,7 @@ class CategoryController extends Controller {
     	$Category=D('Category');
     	$category_path=$Category->get_category_path($cate_id);
     	$this->category_path=$category_path;
-    	echo $Category->getLastSql();
+    	//echo $Category->getLastSql();
     	$categories = $Category->get_categories($cate_id);
     	$this->categories=$categories;
     	$Moxing=D('Moxing');

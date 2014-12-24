@@ -17,10 +17,22 @@
 </div>
 <aside class="modelcategory">
   <div class="InfoContainer">
+    <div id="Name" class="InfoBlack">模型搜索</div>
+    <form id="form" action="__URL__/search" method="post"	class="shortform">
+    <input type='text' name='keywords' class='formclass-input' placeholder="模型搜索"/>
+    <input type="submit" name="baocun" id="baocun" value="搜 索" class="formclass-submit shortsubmit"/>
+	</form>
     <div id="Name" class="InfoBlack">模型分类</div>
+    <div class="InfoOrange">
+    <div class="InfoDesc">
+    首页/
+    </div>
+    </div>
     <volist name="categories" id="vo">
-    <div id="Name" class="InfoBlack">
+    <div class="InfoOrange">
+    <div class="InfoDesc">
     <a href='__MODULE__/category?cate={$vo.cate_id}' class='title' title='分类名称'>{$vo.cate_name}</a>
+    </div>
     </div>
     </volist>
   </div>
