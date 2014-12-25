@@ -15,7 +15,7 @@ class IndexController extends Controller {
     	$this->display();
     }
     public function model(){
-    	$Moxing=M('Moxing','think_');
+    	session_start();    	  	
     	$md5=I('f');
     	if (!preg_match("/^([a-fA-F0-9]{32})$/", $md5))
     	{
@@ -23,7 +23,15 @@ class IndexController extends Controller {
     		exit();
     	}
     	$where="folder='".$md5."'";
+    	$Moxing=M('Moxing','think_');
     	$data=$Moxing->where($where)->find();
+    	$allow_sep='180';
+    	if(!isset($_SESSION['post_sep']))$_SESSION['post_sep']=time();
+    	if(time() - $_SESSION['post_sep'] > $allow_sep)$_SESSION['post_sep']=time();
+    	if($_SESSION['post_sep']==time()){
+    		$Moxing->views=$data['views']+1;
+    		$Moxing->where('id='.$data['id'])->save();    	
+    	}
     	$this->assign('model',$data);
     	$Category=D('Category');
     	$category_path=$Category->get_category_path($data['category']);

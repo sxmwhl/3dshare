@@ -17,28 +17,7 @@
   <label id='slider' class='hide' for='hide'>收起侧栏</label>
 </div>
 <aside class="modelcategory">
-  <div class="InfoContainer">
-    <div id="Name" class="InfoBlack">模型搜索</div>
-    <form id="form" action="__MODULE__/index/search" method="post"	class="shortform">
-    <input type='text' name='keywords' class='formclass-input' placeholder="模型搜索"/>
-    <input type="submit" name="baocun" id="baocun" value="搜 索" class="formclass-submit shortsubmit"/>
-	</form>
-    <div id="Name" class="InfoBlack">模型分类</div>
-    <div class="InfoOrange">
-    <div class="InfoDesc">
-    <a href='__ROOT__/'>首页</a>/
-    <volist name="category_path" id="vo">
-    <a href='__MODULE__/category?cate={$vo.cate_id}'>{$vo.cate_name}</a>/
-    </volist>
-    </div>
-    </div>
-    <volist name="categories" id="vo">
-    <div class="InfoOrange">
-    <div class="InfoDesc">
-    <a href='__MODULE__/category?cate={$vo.cate_id}'>{$vo.cate_name}</a>
-    </div>
-    </div>
-    </volist>
+  <include file="Public:moreModel" />
   </div>
 </aside>
 <div class="wrap">
