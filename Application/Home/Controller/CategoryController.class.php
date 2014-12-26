@@ -18,12 +18,21 @@ class CategoryController extends Controller {
     	$this->display();
     }
     public function add(){
-    	$root_id=I('c');
+    	$root_id=I('cate');
     	$Category=D('Category');
     	$category_option = $Category->get_category_option(0, $root_id, 0);
     	$this->category_option=$category_option;    	
     	//echo $Moxing->getLastSql();
     	$this->display('add');
+    }
+    public function lists(){
+    	$cate_id=I('cate');
+    	if(empty($cate_id))$cate_id=0;
+    	$Category=D('Category');
+    	$categories = $Category->get_categories($cate_id);
+    	$this->categories=$categories;
+    	//echo $Moxing->getLastSql();
+    	$this->display('lists');
     }
     public function save(){
     	$inputs=I('post.');

@@ -35,7 +35,7 @@ class CategoryModel extends Model {
 		return $category_path;
 	}
 	function get_categories($cate_id=0){
-		$categories = $this->Category->where('root_id='.$cate_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
+		$categories = $this->Category->where('root_id='.$cate_id)->order('cate_order ASC,cate_id ASC')->select();
 		return $categories;
 	}
 	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {		
