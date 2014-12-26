@@ -22,9 +22,8 @@ class CategoryModel extends Model {
 	}
 	function get_one_category($cate_id = 0) {
 		$row=$this->Category->where("cate_id=".$cate_id)->find();	
-		
 		//$row = load_cache('category_'.$cate_id) ? load_cache('category_'.$cate_id) : $DB->fetch_one("SELECT cate_id, root_id, cate_name, cate_dir, cate_arrparentid, cate_arrchildid, cate_childcount, cate_postcount FROM ".$DB->table('categories')." WHERE cate_id=$cate_id LIMIT 1");
-	    return $row;
+		return $row;
 	}
 	function get_category_path($cate_id = 0, $separator = ' &raquo; ') {	
 		$cate = $this->get_one_category($cate_id);
@@ -92,10 +91,19 @@ class CategoryModel extends Model {
 		unset($ids);	
 		return $idstr;
 	}
-	function get_category_count($cate_id = 0) {
-			
+	function get_category_count($cate_id = 0) {			
 		if ($cate_id > 0) $rows = $this->Category->where('root_id='.$cate_id)->field('cate_id')->select();
 		$count = count($rows);	
+		return $count;
+	}
+	function get_moxing_count($cate_id = 0) {
+		echo $cate_id.'//';
+		$cate_arrchildid=$this->Category->where('cate_id='.$cate_id)->field('cate_arrchildid')->find();
+		if ($cate_id > 0){
+			$Moxing=M('Moxing','think_');			
+			$moxings_id = $Moxing->where('category IN ('.$cate_arrchildid['cate_arrchildid'].')')->field('id')->select();
+		}
+		$count = count($moxings_id);
 		return $count;
 	}
 	function update_categories() {
@@ -103,11 +111,11 @@ class CategoryModel extends Model {
 		$cate_ids = $Category->field('cate_id')->order('cate_id ASC')->select();
 		//$sql = "SELECT cate_id FROM $table ORDER BY cate_id ASC";
 		//$cate_ids = $DB->fetch_all($sql);
-		echo $count = count($cate_ids);
 		foreach ($cate_ids as $id) {
 			$data['cate_arrparentid'] = $this->get_category_parent_ids($id['cate_id']);
 			$data['cate_arrchildid'] = $id['cate_id'].$this->get_category_child_ids($id['cate_id']);
 			$data['cate_childcount'] = $this->get_category_count($id['cate_id']);
+			$data['cate_postcount'] = $this->get_moxing_count($id['cate_id']);
 			if (!$Category->create($data,2)){ // 创建数据对象
 				// 如果创建失败 表示验证没有通过 输出错误提示信息
 				exit($Category->getError());

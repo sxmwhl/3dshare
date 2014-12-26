@@ -447,6 +447,10 @@ input.formclass-input, input.formclass-file, textarea.formclass-input, select.fo
 	width: 300px;
 	padding: 0px 0px;	
 }
+.longform{
+	width: 700px;
+	color:white;
+}
 .shortform > h1 {
   margin-top: 5px;
   margin-bottom: 5px;

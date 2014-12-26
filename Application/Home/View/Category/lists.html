@@ -17,15 +17,16 @@
 				<span>让更多的人看到你的作品..</span>
 			</div>
 		</div>		
-			<form name="mform" method="post" action="del" class="formclass">
+			<form name="mform" method="post" action="del" class="formclass longform">
+			<h1>分 类 列 表</h1>
 		<table width="100%" border="0" cellspacing="1" cellpadding="0">
 			<tr>
 				<th>ID</th>
 				<th>分类名称</th>
 				<th>目录名称</th>
-				<th>站点数目</th>
+				<th>模型数目</th>
 				<th>排列顺序</th>
-				<th>栏目属性</th>
+				<th>分类属性</th>
 				<th>操作选项</th>
 			</tr>
 			<volist name="categories" id="cate">
@@ -35,8 +36,8 @@
 				<td>{$cate.cate_dir}</td>
 				<td>{$cate.cate_postcount}</td>
 				<td>{$cate.cate_order}</td>
-				<td>{$cate.cate_attr}</td>
-				<td>{$cate.cate_operate}</td>
+				<td>{$cate.cate_isbest}</td>
+				<td><a href='edit?cate={$cate.cate_id}'>编辑</a> | 清空 | 删除 | <a href='lists?cate={$cate.cate_id}'>进入子类</a> | <a href='add?cate={$cate.cate_id}'>添加子类</a></td>
 			</tr>
 			</volist>
 		</table>
