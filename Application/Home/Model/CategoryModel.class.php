@@ -25,18 +25,7 @@ class CategoryModel extends Model {
 		//$row = load_cache('category_'.$cate_id) ? load_cache('category_'.$cate_id) : $DB->fetch_one("SELECT cate_id, root_id, cate_name, cate_dir, cate_arrparentid, cate_arrchildid, cate_childcount, cate_postcount FROM ".$DB->table('categories')." WHERE cate_id=$cate_id LIMIT 1");
 		return $row;
 	}
-	function get_category_path($cate_id = 0, $separator = ' &raquo; ') {	
-		$cate = $this->get_one_category($cate_id);
-		if (!isset($cate)) return '';
-		$category_path=$this->Category->where("cate_id IN (".$cate_id.",".$cate['cate_arrparentid'].")")->field('cate_id,cate_name')->select();	
-		//$sql = "SELECT cate_id, cate_name FROM ".$DB->table('categories')." WHERE cate_id IN (".$cate_id.','.$cate['cate_arrparentid'].")";
-		//$categories = $DB->fetch_all($sql);
-		return $category_path;
-	}
-	function get_categories($cate_id=0){
-		$categories = $this->Category->where('root_id='.$cate_id)->order('cate_order ASC,cate_id ASC')->select();
-		return $categories;
-	}
+
 	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {		
 		$categories = $this->Category->where('root_id='.$root_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
 		//$sql = "SELECT cate_id, cate_name FROM ".$DB->table('categories')." WHERE root_id=$root_id ORDER BY cate_order ASC, cate_id ASC";
@@ -61,70 +50,61 @@ class CategoryModel extends Model {
 		unset($categories);
 		return $optstr;
 	}
-	function get_category_parent_ids($cate_id) {
-		$ids = $this->Category->where('cate_id='.$cate_id)->field('root_id')->select();
-		//$sql = "SELECT root_id FROM ".$DB->table('categories')." WHERE cate_id='$cate_id'";
-		//$ids = $DB->fetch_all($sql);	
-		$idstr = '';
-		if (!empty($ids) && is_array($ids)) {
-			foreach ($ids as $id) {
-				if ($id['root_id'] > 0) {
-					$idstr .= $this->get_category_parent_ids($id['root_id']);
-					$idstr .= ','.$id['root_id'];
-				} else {
-					$idstr = '0';
-				}
-			}
-		}	
-		return $idstr;
+	function  get_root_id($cate_id){
+		$get_root_id=$this->Category->where('cate_id='.$cate_id)->field('root_id')->find();
+		return $get_root_id['root_id'];
 	}
-	 
-	function get_category_child_ids($cate_id) {
-		$ids = $this->Category->where('root_id='.$cate_id)->field('cate_id')->select();	
-		//$sql = "SELECT cate_id FROM ".$DB->table('categories')." WHERE root_id=$cate_id";
-		//$ids = $DB->fetch_all($sql);
-		$idstr = '';
-		foreach ($ids as $id) {
-			$idstr .= ','.$id['cate_id'];
-			$idstr .= $this->get_category_child_ids($id['cate_id']);
+	function get_root_ids($cate_id) {
+		$str="";
+		$i=0;
+		while ($cate_id>0){
+			$cate_id=$this->get_root_id($cate_id);
+			$str=$cate_id.','.$str;
+			$i++;
 		}
-		unset($ids);	
-		return $idstr;
+		$get_root_ids=rtrim($str, ",") ;
+		$cate_id=null;
+		$i=null;
+		$str=null;
+		return $get_root_ids;
 	}
-	function get_category_count($cate_id = 0) {			
-		if ($cate_id > 0) $rows = $this->Category->where('root_id='.$cate_id)->field('cate_id')->select();
-		$count = count($rows);	
-		return $count;
+	function get_child_categories($cate_id=0){
+		$categories = $this->Category->where('root_id='.$cate_id)->order('cate_order ASC,cate_id ASC')->select();
+		return $categories;
+	}	 
+	function get_child_ids($cate_id=0) {
+		$str="";
+		$child_categories=$this->get_child_categories($cate_id);
+		foreach ($child_categories as $child_category){
+			$str=$child_category['cate_id'].$str;			
+		}
+		$get_child_ids=$str;
+		$str=null;
+		return $get_child_ids;
 	}
 	function get_moxing_count($cate_id = 0) {
-		echo $cate_id.'//';
-		$cate_arrchildid=$this->Category->where('cate_id='.$cate_id)->field('cate_arrchildid')->find();
-		if ($cate_id > 0){
-			$Moxing=M('Moxing','think_');			
-			$moxings_id = $Moxing->where('category IN ('.$cate_arrchildid['cate_arrchildid'].')')->field('id')->select();
-		}
-		$count = count($moxings_id);
-		return $count;
+		$Moxing=M('Moxing','think_');			
+		$moxings_id = $Moxing->where('category='.$cate_id)->field('id')->select();
+		$get_moxing_count = count($moxings_id);
+		return $get_moxing_count;
 	}
-	function update_categories() {
-		$Category=D('Category');
-		$cate_ids = $Category->field('cate_id')->order('cate_id ASC')->select();
-		//$sql = "SELECT cate_id FROM $table ORDER BY cate_id ASC";
-		//$cate_ids = $DB->fetch_all($sql);
-		foreach ($cate_ids as $id) {
-			$data['cate_arrparentid'] = $this->get_category_parent_ids($id['cate_id']);
-			$data['cate_arrchildid'] = $id['cate_id'].$this->get_category_child_ids($id['cate_id']);
-			$data['cate_childcount'] = $this->get_category_count($id['cate_id']);
-			$data['cate_postcount'] = $this->get_moxing_count($id['cate_id']);
-			if (!$Category->create($data,2)){ // 创建数据对象
-				// 如果创建失败 表示验证没有通过 输出错误提示信息
-				exit($Category->getError());
-			}else{
-				// 验证通过 写入新增数据
-				//echo $Moxing->title;
-				$where="cate_id='".$id['cate_id']."'";
-				$Category->where($where)->save();				 
-			}
-		}
+	function add_category_update($cate_id=0) {
+		if($cate_id>0){
+			$data['cate_arrparentid']=$this->get_root_ids($cate_id);
+			$data['cate_arrchildid']=$this->get_child_ids($cate_id);
+			$data['cate_postcount']=$this->get_moxing_count($cate_id);
+			$this->Category->where('cate_id='.$cate_id)->save($data);
+			echo $this->Category->getLastSql();
+			$root_id=$this->get_root_id($cate_id);
+			$root_category=$this->Category->where('cate_id='.$root_id)->field('cate_arrchildid')->find();
+		}		
+		if(!empty($root_category)){
+			if($root_category['cate_arrchildid']==''){
+				$this->Category->cate_arrchildid=$cate_id;
+			}else {
+				$this->Category->cate_arrchildid=$root_category['cate_arrchildid'].','.$cate_id;
+			}			
+			$this->Category->where('cate_id='.$root_id)->save();
+		}		
 	}
 }

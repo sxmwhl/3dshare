@@ -107,24 +107,21 @@
 			    <h1>基本信息</h1>
 
 				<h2>模型名称*：</h2>
-				<input type="text" name="title" id="title" value="{$model.title}" />
+				<input type="text" name="title" id="title" value="{$model.title}" class="formclass-input"/>
 
 
 				<h2>模型描述*：</h2>
 				<textarea name="description" id="description" cols="32" rows="5">{$model.description}</textarea>
 
 
-				<h2>模型分类*：</h2>
-				<select name="category" id="category">
-				<option value="0">请选择分类</option>
-					{$category_option}
-				</select>
+				<h2>请对模型进行分类（如：/动物/鱼）</h2>
+				<input name="category_string" type="text" id="creator" size="10" value="{$model.category_string}" class="formclass-input"/> 
 				<input type="hidden" name="preview_ext" value="{$model.preview_ext}" />
 				<input type="hidden" name="folder" value="{$model.folder}" /> 
 				<h2>创建者：</h2>
-				<input name="creator" type="text" id="creator" size="10" value="{$model.creator}" /> 
+				<input name="creator" type="text" id="creator" size="10" value="{$model.creator}" class="formclass-input"/> 
 				<h2> E-mail：</h2>
-				<input name="email" type="text" id="email" size="20" value="{$model.email}" /> 
+				<input name="email" type="text" id="email" size="20" value="{$model.email}" class="formclass-input"/> 
 				 <h1>灯光信息（可选）</h1>
 				<h2>头顶灯光：开启:<input name="hl_on" type="checkbox" onchange="change()" id="HL" value="1" {$model.hl_on_checked} /></h2>
 				

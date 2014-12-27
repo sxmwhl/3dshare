@@ -26,7 +26,7 @@ title varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci ,
 description varchar(300) CHARACTER SET utf8 COLLATE utf8_general_ci ,
 preview_ext varchar(4),
 folder varchar(32),
-category smallint unsigned,
+category smallint(5) unsigned NOT NULL DEFAULT '0',
 creator varchar(30),
 email varchar(30),
 time_update datetime,
@@ -39,21 +39,18 @@ vp_orientation varchar(40)
 );
 CREATE TABLE think_category 
 (
-  `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
-  `pid` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `cid` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `name` varchar(50) NOT NULL DEFAULT '',
-  `isbest` tinyint(1) unsigned NOT NULL DEFAULT '0',
-  `order` smallint(5) unsigned NOT NULL DEFAULT '0',
-  `keywords` varchar(100) NOT NULL DEFAULT '',
-  `description` varchar(255) NOT NULL DEFAULT '',
-  `arrparentid` varchar(255) NOT NULL,
-  `arrchildid` text NOT NULL,
-  `childcount` tinyint(3) unsigned NOT NULL DEFAULT '0',
-  `postcount` smallint(5) unsigned NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`),
-  KEY `pid` (`pid`),
-  KEY `cid` (`cid`)
+  `cate_id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
+  `root_id` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `cate_name` varchar(50) NOT NULL DEFAULT '',
+  `cate_isbest` tinyint(1) unsigned NOT NULL DEFAULT '0',
+  `cate_order` smallint(5) unsigned NOT NULL DEFAULT '0',
+  `cate_keywords` varchar(100) NOT NULL DEFAULT '',
+  `cate_description` varchar(255) NOT NULL DEFAULT '',
+  `cate_arrparentid` varchar(255) NOT NULL,
+  `cate_arrchildid` text NOT NULL,
+  `cate_postcount` smallint(5) unsigned NOT NULL DEFAULT '0',
+  PRIMARY KEY (`cate_id`),
+  KEY `root_id` (`root_id`)
 );";
 if ($con->multi_query($sqls))
 {

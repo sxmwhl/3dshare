@@ -53,9 +53,10 @@ class CategoryController extends Controller {
     	}else{
     		// 验证通过 写入新增数据
     		//echo $Moxing->title;
-    		$Category->add();    		
+    		$cate_id=$Category->add();
+    		print $cate_id;
     	}    	
-    	$Category->update_categories();
+    	$Category->add_category_update($cate_id);
     	//$this->display('modelIn');
     }
     public function update(){

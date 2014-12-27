@@ -10,7 +10,7 @@ class IndexController extends Controller {
     	$this->models2=$list2;
     	//echo $Moxing->getLastSql();
     	$Category=D('Category');
-    	$list3=$Category->get_categories(0);
+    	$list3=$Category->get_child_categories(0);
     	$this->categories=$list3;
     	$this->display();
     }
