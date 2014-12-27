@@ -20,8 +20,8 @@ class CategoryModel extends Model {
 		parent::__construct();
 		$this->Category=M('Category','think_');
 	}
-	function get_one_category($cate_id = 0) {
-		$row=$this->Category->where("cate_id=".$cate_id)->find();	
+	function get_one_category($id = 0) {
+		$row=$this->Category->where("id=".$id)->find();	
 		//$row = load_cache('category_'.$cate_id) ? load_cache('category_'.$cate_id) : $DB->fetch_one("SELECT cate_id, root_id, cate_name, cate_dir, cate_arrparentid, cate_arrchildid, cate_childcount, cate_postcount FROM ".$DB->table('categories')." WHERE cate_id=$cate_id LIMIT 1");
 		return $row;
 	}
