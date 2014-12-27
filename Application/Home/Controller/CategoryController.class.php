@@ -9,7 +9,7 @@ class CategoryController extends Controller {
     	$category_path=$Category->get_category_path($cate_id);
     	$this->category_path=$category_path;
     	//echo $Category->getLastSql();
-    	$categories = $Category->get_categories($cate_id);
+    	$categories = $Category->get_child_categories($cate_id);
     	$this->categories=$categories;
     	$Moxing=D('Moxing');
     	$moxings = $Moxing->get_category_moxings($cate_id);
@@ -54,9 +54,9 @@ class CategoryController extends Controller {
     		// 验证通过 写入新增数据
     		//echo $Moxing->title;
     		$cate_id=$Category->add();
-    		print $cate_id;
     	}    	
     	$Category->add_category_update($cate_id);
+    	echo $Category->get_root_string($cate_id)."end...";
     	//$this->display('modelIn');
     }
     public function update(){

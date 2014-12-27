@@ -20,12 +20,21 @@ class CategoryModel extends Model {
 		parent::__construct();
 		$this->Category=M('Category','think_');
 	}
-	function get_one_category($id = 0) {
-		$row=$this->Category->where("id=".$id)->find();	
+	function get_one_category($cate_id = 0) {
+		$row=$this->Category->where("cate_id=".$cate_id)->find();	
 		//$row = load_cache('category_'.$cate_id) ? load_cache('category_'.$cate_id) : $DB->fetch_one("SELECT cate_id, root_id, cate_name, cate_dir, cate_arrparentid, cate_arrchildid, cate_childcount, cate_postcount FROM ".$DB->table('categories')." WHERE cate_id=$cate_id LIMIT 1");
-		return $row;
+		$get_one_category=$row;
+		$row=null;
+		return $get_one_category;
 	}
-
+	function get_category_path($cate_id = 0) {
+		$cate = $this->get_one_category($cate_id);
+		if (!isset($cate)) return '';
+		$category_path=$this->Category->where("cate_id IN (".$cate_id.",".$cate['cate_arrparentid'].")")->field('cate_id,cate_name')->select();
+		//$sql = "SELECT cate_id, cate_name FROM ".$DB->table('categories')." WHERE cate_id IN (".$cate_id.','.$cate['cate_arrparentid'].")";
+		//$categories = $DB->fetch_all($sql);
+		return $category_path;
+	}
 	function get_category_option($root_id = 0, $cate_id = 0, $level_id = 0) {		
 		$categories = $this->Category->where('root_id='.$root_id)->field('cate_id,cate_name')->order('cate_order ASC,cate_id ASC')->select();
 		//$sql = "SELECT cate_id, cate_name FROM ".$DB->table('categories')." WHERE root_id=$root_id ORDER BY cate_order ASC, cate_id ASC";
@@ -54,6 +63,10 @@ class CategoryModel extends Model {
 		$get_root_id=$this->Category->where('cate_id='.$cate_id)->field('root_id')->find();
 		return $get_root_id['root_id'];
 	}
+	function  get_cate_name($cate_id){
+		$get_cate_name=$this->Category->where('cate_id='.$cate_id)->field('cate_name')->find();
+		return $get_cate_name['cate_name'];
+	}
 	function get_root_ids($cate_id) {
 		$str="";
 		$i=0;
@@ -67,6 +80,23 @@ class CategoryModel extends Model {
 		$i=null;
 		$str=null;
 		return $get_root_ids;
+	}
+	function get_root_string($cate_id) {
+		$root_name='';
+		$cate=$this->get_one_category($cate_id);
+		$cate_root_arr=explode(',',$cate['cate_arrparentid']);
+		echo $cate['cate_arrparentid'];
+		print_r($cate_root_arr);
+		foreach ($cate_root_arr as $root_id){			
+			$str=$this->get_cate_name($root_id).'/';	
+			$root_name=$root_name.$str;			
+		}		
+		$get_root_string=rtrim($root_name, "/") ;
+		$cate=null;
+		$cate_root_arr=null;
+		$str=null;
+		$root_name=null;
+		return $get_root_string;
 	}
 	function get_child_categories($cate_id=0){
 		$categories = $this->Category->where('root_id='.$cate_id)->order('cate_order ASC,cate_id ASC')->select();
@@ -94,7 +124,7 @@ class CategoryModel extends Model {
 			$data['cate_arrchildid']=$this->get_child_ids($cate_id);
 			$data['cate_postcount']=$this->get_moxing_count($cate_id);
 			$this->Category->where('cate_id='.$cate_id)->save($data);
-			echo $this->Category->getLastSql();
+			//echo $this->Category->getLastSql();
 			$root_id=$this->get_root_id($cate_id);
 			$root_category=$this->Category->where('cate_id='.$root_id)->field('cate_arrchildid')->find();
 		}		
