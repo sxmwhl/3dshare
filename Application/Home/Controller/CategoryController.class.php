@@ -18,20 +18,31 @@ class CategoryController extends Controller {
     	$this->display();
     }
     public function add(){
-    	$root_id=I('cate');
+    	$cate_id=I('cate');
     	$Category=D('Category');
-    	$category_option = $Category->get_category_option(0, $root_id, 0);
+    	$category_option = $Category->get_category_option(0, $cate_id, 0);
     	$this->category_option=$category_option;    	
     	//echo $Moxing->getLastSql();
     	$this->display('add');
     }
     public function del(){
-    	$root_id=I('cate');
+    	$cate_id=I('cate');
     	$Category=D('Category');
-    	$category_option = $Category->get_category_option(0, $root_id, 0);
+    	$row=$Category->get_one_category($cate_id);
+    	if ($row['cate_postcount']!=0)exit('此分类下含有模型，无法删除！');
+    	if ($row['cate_childcount']!=0)exit('此分类下含有子类，无法删除！');
+    	if($Category->delete($cate_id)!=1)exit('删除分类出差，请重试！');
+    	$row2=$Category->get_one_category($row['root_id']);
+    	if ($row2['cate_childcount']>0){
+    		$cate_childcount=$row2['cate_childcount']-1;
+    		$Category-> where('cate_id='.$row2['cate_id'])->setField('cate_childcount',$cate_childcount);
+    	}
     	$this->category_option=$category_option;
-    	//echo $Moxing->getLastSql();
-    	$this->display('add');
+    	$row=null;
+    	$row2=null;
+    	$category_option=null;
+    	echo $Category->getLastSql();
+    	//$this->display('add');
     }
     public function edit(){
     	$cate_id=I('cate');
@@ -65,13 +76,15 @@ class CategoryController extends Controller {
     	}else{
     		// 验证通过 写入新增数据
     		//echo $Moxing->title;
-    		if ($Category->add()==false)exit('添加分类出错！');
+    		$cate_id=$Category->add();
+    		if ($cate_id==false)exit('添加分类出错！');
     	}  
     	if($inputs['root_id']>0){
     		$row=$Category->get_one_category($inputs['root_id']);
     		$cate_childcount=$row['cate_childcount']+1;
     		$Category-> where('cate_id='.$inputs['root_id'])->setField('cate_childcount',$cate_childcount);
     	}    	
+    	$row=null;
     	//$Category->add_category_update($cate_id);
     	echo '添加路径成功：'.$Category->get_root_string($cate_id)."/".$inputs['cate_name'];
     	//$this->display('modelIn');
