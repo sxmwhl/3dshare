@@ -46,8 +46,8 @@ CREATE TABLE think_category
   `cate_order` smallint(5) unsigned NOT NULL DEFAULT '0',
   `cate_keywords` varchar(100) NOT NULL DEFAULT '',
   `cate_description` varchar(255) NOT NULL DEFAULT '',
-  `cate_arrparentid` varchar(255) NOT NULL,
-  `cate_arrchildid` text NOT NULL,
+  `cate_arrparentid` varchar(255) NOT NULL DEFAULT '',
+  `cate_childcount` smallint(5) unsigned NOT NULL DEFAULT '0',
   `cate_postcount` smallint(5) unsigned NOT NULL DEFAULT '0',
   PRIMARY KEY (`cate_id`),
   KEY `root_id` (`root_id`)

@@ -85,8 +85,6 @@ class CategoryModel extends Model {
 		$root_name='';
 		$cate=$this->get_one_category($cate_id);
 		$cate_root_arr=explode(',',$cate['cate_arrparentid']);
-		echo $cate['cate_arrparentid'];
-		print_r($cate_root_arr);
 		foreach ($cate_root_arr as $root_id){			
 			$str=$this->get_cate_name($root_id).'/';	
 			$root_name=$root_name.$str;			
@@ -102,39 +100,10 @@ class CategoryModel extends Model {
 		$categories = $this->Category->where('root_id='.$cate_id)->order('cate_order ASC,cate_id ASC')->select();
 		return $categories;
 	}	 
-	function get_child_ids($cate_id=0) {
-		$str="";
-		$child_categories=$this->get_child_categories($cate_id);
-		foreach ($child_categories as $child_category){
-			$str=$child_category['cate_id'].$str;			
-		}
-		$get_child_ids=$str;
-		$str=null;
-		return $get_child_ids;
-	}
 	function get_moxing_count($cate_id = 0) {
 		$Moxing=M('Moxing','think_');			
 		$moxings_id = $Moxing->where('category='.$cate_id)->field('id')->select();
 		$get_moxing_count = count($moxings_id);
 		return $get_moxing_count;
-	}
-	function add_category_update($cate_id=0) {
-		if($cate_id>0){
-			$data['cate_arrparentid']=$this->get_root_ids($cate_id);
-			$data['cate_arrchildid']=$this->get_child_ids($cate_id);
-			$data['cate_postcount']=$this->get_moxing_count($cate_id);
-			$this->Category->where('cate_id='.$cate_id)->save($data);
-			//echo $this->Category->getLastSql();
-			$root_id=$this->get_root_id($cate_id);
-			$root_category=$this->Category->where('cate_id='.$root_id)->field('cate_arrchildid')->find();
-		}		
-		if(!empty($root_category)){
-			if($root_category['cate_arrchildid']==''){
-				$this->Category->cate_arrchildid=$cate_id;
-			}else {
-				$this->Category->cate_arrchildid=$root_category['cate_arrchildid'].','.$cate_id;
-			}			
-			$this->Category->where('cate_id='.$root_id)->save();
-		}		
 	}
 }

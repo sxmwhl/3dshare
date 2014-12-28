@@ -36,7 +36,7 @@ class IndexController extends Controller {
     	$Category=D('Category');
     	$category_path=$Category->get_category_path($data['category']);
     	$this->category_path=$category_path;
-    	$root_category=$Category->get_categories(0);
+    	$root_category=$Category->get_child_categories(0);
     	$this->categories=$root_category;
     	//echo $Moxing->getLastSql();
     	$this->display('model');

@@ -114,8 +114,11 @@
 				<textarea name="description" id="description" cols="32" rows="5">{$model.description}</textarea>
 
 
-				<h2>请对模型进行分类（如：/动物/鱼）</h2>
-				<input name="category_string" type="text" id="creator" size="10" value="{$model.category_string}" class="formclass-input"/> 
+				<h2>模型分类*：（若无合适分类，<a target='_blank' href='__MODULE__/category/add'>点击添加</a>）</h2>
+				<select name="category" id="category">
+				<option value="0">请选择分类</option>
+					{$category_option}
+				</select> 
 				<input type="hidden" name="preview_ext" value="{$model.preview_ext}" />
 				<input type="hidden" name="folder" value="{$model.folder}" /> 
 				<h2>创建者：</h2>
