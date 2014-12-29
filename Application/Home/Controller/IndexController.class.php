@@ -59,7 +59,7 @@ class IndexController extends Controller {
     }
     public function search(){
     	$Category=D('Category');
-    	$list3=$Category->get_categories(0);
+    	$list3=$Category->get_child_categories(0);
     	$this->categories=$list3;
     	$Moxing=M('Moxing','think_');
     	$keywords=I('keywords');
