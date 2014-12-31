@@ -2,8 +2,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="__PUBLIC__/js/validate.js"></script>
 <link rel="stylesheet" href="__PUBLIC__/css/style.css" type="text/css" media="all" />
 <title>模型分享-web3d中文站</title>
+<script>
+var validator = new FormValidator('upload_form', [{
+    name: 'model',
+    display: '模型',
+    rules: 'required|is_file_type[x3d]'
+}, {
+    name: 'preview',
+    display: '缩略图',
+    rules: 'required|is_file_type[gif,png,jpg,jepg]'
+}, {
+    name: 'texture',
+    display: '贴图',
+    rules: 'is_file_type[gif,png,jpg,jepg]'
+}], function(errors, event) {
+    if (errors.length > 0) {
+    	alert("出错");
+    }
+});
+</script>
 </head>
 
 <body>
@@ -13,7 +33,7 @@
       <h1> <a href="__ROOT__/"><img src="__PUBLIC__/images/logo.png" alt="" /></a> </h1>
       <span>让更多的人看到你的作品..</span> </div>
   </div>
-  <form method="post" action="__URL__/upload" enctype="multipart/form-data" class="formclass">
+  <form method="post" action="__URL__/upload" enctype="multipart/form-data" class="formclass" name="upload_form">
     <input type="hidden" name="MAX_FILE_SIZE" value="10485760"/>
     <h1>分享您的模型...</h1>
     <h2>模型文件*:(x3d)</h2>
