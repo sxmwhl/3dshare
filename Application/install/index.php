@@ -35,7 +35,9 @@ views mediumint unsigned,
 hl_on boolean NOT NULL DEFAULT '0',
 dl_on boolean NOT NULL DEFAULT '0',
 vp_position varchar(30),
-vp_orientation varchar(40)
+vp_orientation varchar(40),
+ip_upload varchar(15),
+ip_last_modify varchar(15)
 );
 CREATE TABLE think_category 
 (

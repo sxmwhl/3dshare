@@ -66,14 +66,14 @@ class FormController extends Controller {
     		$inputs['folder']=$model_md5_empty;
     		$inputs['preview_ext']=$preview_ext_empty;
     		$inputs['time_update']=date('Y-m-d H:i:s',time());
+    		$inputs['ip_upload']=get_client_ip();
     		if (!$Moxing->create($inputs)){ // 创建数据对象
     			// 如果创建失败 表示验证没有通过 输出错误提示信息
     			exit($Moxing->getError());
     			 
     		}else{
     			// 验证通过 写入新增数据
-    			$Moxing->add();
-    			 
+    			$Moxing->add();    			 
     		}
     		header("refresh:3;url=modify?f=".$model_md5_empty);
     		echo '模型上传成功，请稍等...<br>三秒后自动跳转至预览页面，请对模型信息进行完善...';
@@ -107,6 +107,7 @@ class FormController extends Controller {
     	$model_show['dl_on_checked']=$model_show['dl_on']==0?"":"checked='checked'";
     	$model_show['hl_on']=$model_show['hl_on']==0?"false":"true";
     	$model_show['dl_on']=$model_show['dl_on']==0?"false":"true";
+    	$model_show['ip_last_modify']=get_client_ip();
     	$this->model=$model_show;
     	$this->display('modify');
     }

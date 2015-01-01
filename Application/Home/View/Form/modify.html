@@ -105,22 +105,18 @@
 			onkeydown="if(event.keyCode==13)return false;"
 			class="shortform">
 			    <h1>基本信息</h1>
-
 				<h2>模型名称*：</h2>
 				<input type="text" name="title" id="title" value="{$model.title}" class="formclass-input"/>
-
-
 				<h2>模型描述*：</h2>
 				<textarea name="description" id="description" cols="32" rows="5">{$model.description}</textarea>
-
-
 				<h2>模型分类*：（若无合适分类，<a target='_blank' href='__MODULE__/category/add'>点击添加</a>）</h2>
 				<select name="category" id="category">
 				<option value="0">请选择分类</option>
 					{$category_option}
 				</select> 
 				<input type="hidden" name="preview_ext" value="{$model.preview_ext}" />
-				<input type="hidden" name="folder" value="{$model.folder}" /> 
+				<input type="hidden" name="folder" value="{$model.folder}" />
+				<input type="hidden" name="ip_last_modify" value="{$model.ip_last_modify}" />  
 				<h2>创建者：</h2>
 				<input name="creator" type="text" id="creator" size="10" value="{$model.creator}" class="formclass-input"/> 
 				<h2> E-mail：</h2>
@@ -130,8 +126,6 @@
 				
 				<h2> 平行光： 开启 <input name="dl_on" type="checkbox" id="DL"
 					value="1" onchange="change()" {$model.dl_on_checked}/></h2>
-				
-
                 <h1>视角信息（可选）</h1>
 				<h2>位置：（改变Z值可以拉近或远离模型）</h2> 
 				X <input name="vp_x" type="text" id="vp_x"
@@ -149,7 +143,8 @@
 					Z <input name="vp_d_z" type="text" id="vp_d_z" value="{$model.vp_d_z}" size="3"
 					onchange="change()" onkeyup="clearNoNum(this)" /> A <input name="vp_d_a" type="text"
 					id="vp_d_a" value="{$model.vp_d_a}" size="3" onchange="change()" onkeyup="clearNoNum(this)" />
-				<input type="submit" name="baocun" id="baocun" value="保存模型信息" class="formclass-submit shortsubmit"/>				
+					<h2>您的IP地址：{$model.ip_last_modify}</h2>	
+				<input type="submit" name="baocun" id="baocun" value="保存模型信息" class="formclass-submit shortsubmit"/>							
 		</form>
 		<img src="__PUBLIC__/upload/{$model.folder}/preview.{$model.preview_ext}"
 					width="280" height="200" title="模型缩略图" alt="模型缩略图" />
