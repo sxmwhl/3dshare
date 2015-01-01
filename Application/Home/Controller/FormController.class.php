@@ -19,6 +19,8 @@ class FormController extends Controller {
     	}else{// 上传成功 获取上传文件信息
     		foreach($info as $file){    
     			if ($file['key']=='model'){
+    				//是否为x3d格式
+    				if($file['ext']!="x3d"&&$file['ext']!="X3D")exit(模型格式不正确！);
     				//>>>添加判断MD5是否重复 超链接需修改##############################
     				$Moxing_check=M('Moxing','think_');
     				$where_md5="folder='".$file['md5']."'";
