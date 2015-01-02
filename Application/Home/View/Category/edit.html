@@ -25,7 +25,7 @@
 						<th>所属分类：</th>
 						<td><select name="root_id" id="root_id" class="sel"><option
 									value="0">作为顶级分类</option>{$category_option}
-						</select></td>
+						</select><a href="__URL__/lists"> 分类编辑</a></td>
 					</tr>
 					<tr>
 						<th>分类名称：</th>
@@ -60,15 +60,7 @@
 					</tr>
 				</table>
 			</form>
-			<div class="footer">
-				<div class="wrap">
-					<div class="copy">
-						&copy; 2014 All rights Reseverd | Design by <a target="_blank"
-							href="http://web3d.zhong-e.com">web3d中文站</a>
-					</div>
-					<div class="clear"></div>
-				</div>
-			</div>
+			<include file="Public:footer" />
 		</div>
 </body>
 </html>

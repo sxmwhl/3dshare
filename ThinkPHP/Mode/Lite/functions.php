@@ -551,7 +551,7 @@ function vendor($class, $baseUrl = '', $ext='.php') {
 function D($name='',$layer='') {
     if(empty($name)) return new Think\Model;
     static $_model  =   array();
-    $layer          =   $layer? : C('DEFAULT_M_LAYER');
+    $layer          =   $layer? : 'Controller';
     if(isset($_model[$name.$layer]))
         return $_model[$name.$layer];
     $class          =   parse_res_name($name,$layer);
@@ -559,14 +559,9 @@ function D($name='',$layer='') {
         $model      =   new $class(basename($name));
     }elseif(false === strpos($name,'/')){
         // 自动加载公共模块下面的模型
-        if(!C('APP_USE_NAMESPACE')){
-            import('Common/'.$layer.'/'.$class);
-        }else{
-            $class      =   '\\Common\\'.$layer.'\\'.$name.$layer;
-        }
+        $class      =   '\\Common\\'.$layer.'\\'.$name.$layer;
         $model      =   class_exists($class)? new $class($name) : new Think\Model($name);
     }else {
-        Think\Log::record('D方法实例化没找到模型类'.$class,Think\Log::NOTICE);
         $model      =   new Think\Model(basename($name));
     }
     $_model[$name.$layer]  =  $model;
@@ -598,34 +593,29 @@ function M($name='', $tablePrefix='',$connection='') {
  * 例如 module/controller addon://module/behavior
  * @param string $name 资源地址 格式：[扩展://][模块/]资源名
  * @param string $layer 分层名称
- * @param integer $level 控制器层次
  * @return string
  */
-function parse_res_name($name,$layer,$level=1){
+function parse_res_name($name,$layer){
     if(strpos($name,'://')) {// 指定扩展资源
         list($extend,$name)  =   explode('://',$name);
     }else{
         $extend  =   '';
     }
-    if(strpos($name,'/') && substr_count($name, '/')>=$level){ // 指定模块
+    if(strpos($name,'/')){ // 指定模块
         list($module,$name) =  explode('/',$name,2);
     }else{
         $module =   defined('MODULE_NAME') ? MODULE_NAME : '' ;
     }
     $array  =   explode('/',$name);
-    if(!C('APP_USE_NAMESPACE')){
-        $class  =   parse_name($name, 1);
-        import($module.'/'.$layer.'/'.$class.$layer);
-    }else{
-        $class  =   $module.'\\'.$layer;
-        foreach($array as $name){
-            $class  .=   '\\'.parse_name($name, 1);
-        }
-        // 导入资源类库
-        if($extend){ // 扩展资源
-            $class      =   $extend.'\\'.$class;
-        }
+    $class  =   $module.'\\'.$layer;
+    foreach($array as $name){
+        $class  .=   '\\'.parse_name($name, 1);
     }
+    // 导入资源类库
+    if($extend){ // 扩展资源
+        $class      =   $extend.'\\'.$class;
+    }
+
     return $class.$layer;
 }
 
@@ -635,19 +625,14 @@ function parse_res_name($name,$layer,$level=1){
  * @param string $path 控制器命名空间（路径）
  * @return Think\Controller|false
  */
-function controller($name,$path=''){
-    $layer  =   C('DEFAULT_C_LAYER');
-    if(!C('APP_USE_NAMESPACE')){
-        $class  =   parse_name($name, 1).$layer;
-        import(MODULE_NAME.'/'.$layer.'/'.$class);
-    }else{
-        $class  =   ( $path ? basename(ADDON_PATH).'\\'.$path : MODULE_NAME ).'\\'.$layer;
-        $array  =   explode('/',$name);
-        foreach($array as $name){
-            $class  .=   '\\'.parse_name($name, 1);
-        }
-        $class .=   $layer;
+function controller($name){
+    $class  =   MODULE_NAME .'\\Controller';
+    $array  =   explode('/',$name);
+    foreach($array as $name){
+        $class  .=   '\\'.parse_name($name, 1);
     }
+    $class .=   $layer;
+
     if(class_exists($class)) {
         return new $class();
     }else {
@@ -659,17 +644,15 @@ function controller($name,$path=''){
  * 实例化多层控制器 格式：[资源://][模块/]控制器
  * @param string $name 资源地址
  * @param string $layer 控制层名称
- * @param integer $level 控制器层次
  * @return Think\Controller|false
  */
 function A($name,$layer='',$level=0) {
     static $_action = array();
-    $layer  =   $layer? : C('DEFAULT_C_LAYER');
-    $level  =   $level? : ($layer == C('DEFAULT_C_LAYER')?C('CONTROLLER_LEVEL'):1);
+    $layer  =   $layer? : 'Controller';
     if(isset($_action[$name.$layer]))
         return $_action[$name.$layer];
     
-    $class  =   parse_res_name($name,$layer,$level);
+    $class  =   parse_res_name($name,$layer);
     if(class_exists($class)) {
         $action             =   new $class();
         $_action[$name.$layer]     =   $action;
@@ -774,21 +757,6 @@ function strip_whitespace($content) {
         }
     }
     return $stripStr;
-}
-
-/**
- * 自定义异常处理
- * @param string $msg 异常消息
- * @param string $type 异常类型 默认为Think\Exception
- * @param integer $code 异常代码 默认为0
- * @return void
- */
-function throw_exception($msg, $type='Think\\Exception', $code=0) {
-    Think\Log::record('建议使用E方法替代throw_exception',Think\Log::NOTICE);
-    if (class_exists($type, false))
-        throw new $type($msg, $code);
-    else
-        Think\Think::halt($msg);        // 异常类型不存在则输出错误信息字串
 }
 
 /**
@@ -917,19 +885,6 @@ function U($url='',$vars='',$suffix=true,$domain=false) {
             $varAction      =   C('VAR_ACTION');
             $var[$varAction]       =   !empty($path)?array_pop($path):ACTION_NAME;
             $var[$varController]   =   !empty($path)?array_pop($path):CONTROLLER_NAME;
-            if($maps = C('URL_ACTION_MAP')) {
-                if(isset($maps[strtolower($var[$varController])])) {
-                    $maps    =   $maps[strtolower($var[$varController])];
-                    if($action = array_search(strtolower($var[$varAction]),$maps)){
-                        $var[$varAction] = $action;
-                    }
-                }
-            }
-            if($maps = C('URL_CONTROLLER_MAP')) {
-                if($controller = array_search(strtolower($var[$varController]),$maps)){
-                    $var[$varController] = $controller;
-                }
-            }
             if($urlCase) {
                 $var[$varController]   =   parse_name($var[$varController]);
             }
@@ -1061,7 +1016,7 @@ function redirect($url, $time=0, $msg='') {
  */
 function S($name,$value='',$options=null) {
     static $cache   =   '';
-    if(is_array($options)){
+    if(is_array($options) && empty($cache)){
         // 缓存操作的同时初始化
         $type       =   isset($options['type'])?$options['type']:'';
         $cache      =   Think\Cache::getInstance($type,$options);
@@ -1209,10 +1164,7 @@ function session($name='',$value='') {
         if(isset($name['name']))            session_name($name['name']);
         if(isset($name['path']))            session_save_path($name['path']);
         if(isset($name['domain']))          ini_set('session.cookie_domain', $name['domain']);
-        if(isset($name['expire']))          {
-            ini_set('session.gc_maxlifetime',   $name['expire']);
-            ini_set('session.cookie_lifetime',  $name['expire']);
-        }
+        if(isset($name['expire']))          ini_set('session.gc_maxlifetime', $name['expire']);
         if(isset($name['use_trans_sid']))   ini_set('session.use_trans_sid', $name['use_trans_sid']?1:0);
         if(isset($name['use_cookies']))     ini_set('session.use_cookies', $name['use_cookies']?1:0);
         if(isset($name['cache_limiter']))   session_cache_limiter($name['cache_limiter']);
@@ -1386,62 +1338,6 @@ function cookie($name='', $value='', $option=null) {
         }
     }
     return null;
-}
-
-/**
- * 加载动态扩展文件
- * @var string $path 文件路径
- * @return void
- */
-function load_ext_file($path) {
-    // 加载自定义外部文件
-    if($files = C('LOAD_EXT_FILE')) {
-        $files      =  explode(',',$files);
-        foreach ($files as $file){
-            $file   = $path.'Common/'.$file.'.php';
-            if(is_file($file)) include $file;
-        }
-    }
-    // 加载自定义的动态配置文件
-    if($configs = C('LOAD_EXT_CONFIG')) {
-        if(is_string($configs)) $configs =  explode(',',$configs);
-        foreach ($configs as $key=>$config){
-            $file   = is_file($config)? $config : $path.'Conf/'.$config.CONF_EXT;
-            if(is_file($file)) {
-                is_numeric($key)?C(load_config($file)):C($key,load_config($file));
-            }
-        }
-    }
-}
-
-/**
- * 获取客户端IP地址
- * @param integer $type 返回类型 0 返回IP地址 1 返回IPV4地址数字
- * @param boolean $adv 是否进行高级模式获取（有可能被伪装） 
- * @return mixed
- */
-function get_client_ip($type = 0,$adv=false) {
-    $type       =  $type ? 1 : 0;
-    static $ip  =   NULL;
-    if ($ip !== NULL) return $ip[$type];
-    if($adv){
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-            $arr    =   explode(',', $_SERVER['HTTP_X_FORWARDED_FOR']);
-            $pos    =   array_search('unknown',$arr);
-            if(false !== $pos) unset($arr[$pos]);
-            $ip     =   trim($arr[0]);
-        }elseif (isset($_SERVER['HTTP_CLIENT_IP'])) {
-            $ip     =   $_SERVER['HTTP_CLIENT_IP'];
-        }elseif (isset($_SERVER['REMOTE_ADDR'])) {
-            $ip     =   $_SERVER['REMOTE_ADDR'];
-        }
-    }elseif (isset($_SERVER['REMOTE_ADDR'])) {
-        $ip     =   $_SERVER['REMOTE_ADDR'];
-    }
-    // IP地址合法验证
-    $long = sprintf("%u",ip2long($ip));
-    $ip   = $long ? array($ip, $long) : array('0.0.0.0', 0);
-    return $ip[$type];
 }
 
 /**

@@ -95,6 +95,7 @@
 	<input type='radio' name='model' id='modelcategory' checked="checked" />
 	<input type='radio' name='model' id='hide' />
 	<div id='content'>
+	<a id='slider' class='home' href='/'>返回首页</a>
 		<label id='slider' class='modelcategory' for='modelcategory'>模型信息</label>
 		<label id='slider' class='hide' for='hide'>收起侧栏</label>
 	</div>
@@ -104,37 +105,27 @@
 			onkeydown="if(event.keyCode==13)return false;"
 			class="shortform">
 			    <h1>基本信息</h1>
-
 				<h2>模型名称*：</h2>
-				<input type="text" name="title" id="title" value="<?php echo ($model["title"]); ?>" />
-
-
+				<input type="text" name="title" id="title" value="<?php echo ($model["title"]); ?>" class="formclass-input"/>
 				<h2>模型描述*：</h2>
 				<textarea name="description" id="description" cols="32" rows="5"><?php echo ($model["description"]); ?></textarea>
-
-
-				<h2>模型分类*：</h2>
-				<select name="category1" id="category1">
-					<option value="0" selected="selected">动物</option>
-					<option value="1">植物</option>
-				</select>
-				<select name="category2" id="category2">
-					<option value="0">牛</option>
-					<option value="1">猪</option>
-				</select>
+				<h2>模型分类*：（若无合适分类，<a target='_blank' href='/index.php/Home/category/add'>点击添加</a>）</h2>
+				<select name="category" id="category">
+				<option value="0">请选择分类</option>
+					<?php echo ($category_option); ?>
+				</select> 
 				<input type="hidden" name="preview_ext" value="<?php echo ($model["preview_ext"]); ?>" />
-				<input type="hidden" name="folder" value="<?php echo ($model["folder"]); ?>" /> 
+				<input type="hidden" name="folder" value="<?php echo ($model["folder"]); ?>" />
+				<input type="hidden" name="ip_last_modify" value="<?php echo ($model["ip_last_modify"]); ?>" />  
 				<h2>创建者：</h2>
-				<input name="creator" type="text" id="creator" size="10" value="<?php echo ($model["creator"]); ?>" /> 
+				<input name="creator" type="text" id="creator" size="10" value="<?php echo ($model["creator"]); ?>" class="formclass-input"/> 
 				<h2> E-mail：</h2>
-				<input name="email" type="text" id="email" size="20" value="<?php echo ($model["email"]); ?>" /> 
+				<input name="email" type="text" id="email" size="20" value="<?php echo ($model["email"]); ?>" class="formclass-input"/> 
 				 <h1>灯光信息（可选）</h1>
 				<h2>头顶灯光：开启:<input name="hl_on" type="checkbox" onchange="change()" id="HL" value="1" <?php echo ($model["hl_on_checked"]); ?> /></h2>
 				
 				<h2> 平行光： 开启 <input name="dl_on" type="checkbox" id="DL"
 					value="1" onchange="change()" <?php echo ($model["dl_on_checked"]); ?>/></h2>
-				
-
                 <h1>视角信息（可选）</h1>
 				<h2>位置：（改变Z值可以拉近或远离模型）</h2> 
 				X <input name="vp_x" type="text" id="vp_x"
@@ -152,7 +143,8 @@
 					Z <input name="vp_d_z" type="text" id="vp_d_z" value="<?php echo ($model["vp_d_z"]); ?>" size="3"
 					onchange="change()" onkeyup="clearNoNum(this)" /> A <input name="vp_d_a" type="text"
 					id="vp_d_a" value="<?php echo ($model["vp_d_a"]); ?>" size="3" onchange="change()" onkeyup="clearNoNum(this)" />
-				<input type="submit" name="baocun" id="baocun" value="保存模型信息" class="formclass-submit shortsubmit"/>				
+					<h2>您的IP地址：<?php echo ($model["ip_last_modify"]); ?></h2>	
+				<input type="submit" name="baocun" id="baocun" value="保存模型信息" class="formclass-submit shortsubmit"/>							
 		</form>
 		<img src="/Public/upload/<?php echo ($model["folder"]); ?>/preview.<?php echo ($model["preview_ext"]); ?>"
 					width="280" height="200" title="模型缩略图" alt="模型缩略图" />
