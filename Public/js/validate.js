@@ -36,7 +36,8 @@
             valid_base64: '%s 必选为base64编码。',
             valid_credit_card: '%s 必须为信用卡号。',
             is_file_type: '%s 只能为  %s 格式。',
-            valid_url: '%s 必须为URL地址。'
+            valid_url: '%s 必须为URL地址。',
+            is_key: '%s 格式错误，只能为汉字、英文字母和_。'
         },
         callback: function(errors) {
 
@@ -60,7 +61,8 @@
         ipRegex = /^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})$/i,
         base64Regex = /[^a-zA-Z0-9\/\+=]/i,
         numericDashRegex = /^[\d\-\s]+$/,
-        urlRegex = /^((http|https):\/\/(\w+:{0,1}\w*@)?(\S+)|)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/;
+        urlRegex = /^((http|https):\/\/(\w+:{0,1}\w*@)?(\S+)|)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?$/,
+        keyRegex = /^[\w\d\u4e00-\u9fff]+(,[\w\d\u4e00-\u9fff]+)*$/;
 
     /*
      * The exposed public object to validate a form:
@@ -482,6 +484,9 @@
 
         valid_url: function(field) {
             return (urlRegex.test(field.value));
+        },
+        is_key: function(field) {
+            return (keyRegex.test(field.value));
         },
 
         valid_credit_card: function(field){

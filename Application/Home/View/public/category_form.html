@@ -51,11 +51,11 @@
 				[ {
 					name : 'cate_name"',
 					display : '分类名称',
-					rules : 'required|max_length[50]'
+					rules : 'required|max_length[50]|is_key'
 				}, {
 					name : 'cate_keywords',
 					display : '关键词',
-					rules : 'required|max_length[50]|callback_is_keywords'
+					rules : 'required|max_length[50]|is_key'
 				}, {
 					name : 'cate_description',
 					display : '分类描述',
@@ -67,7 +67,7 @@
 				}, {
 					name : 'creator',
 					display : '创作者',
-					rules : 'max_length[30]'
+					rules : 'max_length[30]|is_key'
 				}, {
 					name : 'email',
 					display : '邮箱地址',
@@ -116,12 +116,4 @@
 						}
 					}
 				});
-		validator.registerCallback('is_keywords', function(value) {
-			var str=[\w\d\u4e00-\u9fff,]+;
-		    if (value>0) {
-		        return true;
-		    }
-		    return false;
-		})
-		.setMessage('is_keywords', '关键词格式错误！');
 	</script>
