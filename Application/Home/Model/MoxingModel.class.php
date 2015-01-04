@@ -6,9 +6,14 @@ class MoxingModel extends Model {
 	public $Moxing;
 	//自动验证
 	protected $_validate    =   array(
-			array('title',array('未命名',''),'请为模型命名！',1,'notin',2),
-			array('description',array('尚无描述',''),'请对模型进行描述！',1,'notin',2),
-			array('category',array('0',''),'请为模型选择分类！',1,'notin',2),
+			array('title','require','请为模型命名！'),
+			array('title','50','模型名称过长！',0,'length'),
+			array('description','require','请对模型进行描述！'),
+			array('description','300','模型名称过长！',0,'length'),
+			array('category','require','请为模型选择分类！'),
+			array('category','number','分类数据类型必须为数字！'),
+			array('email','email','邮箱格式不正确！'),
+			array('email','30','邮箱名称过长！',0,'length'),			
 	);
 	// 定义自动完成
 	protected $_auto    =   array(

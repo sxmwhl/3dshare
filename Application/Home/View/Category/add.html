@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript" src="__PUBLIC__/js/validate.js"></script>
 <link rel="stylesheet" href="__PUBLIC__/css/style.css" type="text/css"
 	media="all" />
 <title>模型分享-web3d中文站</title>
@@ -16,48 +17,9 @@
 				</h1>
 				<span>让更多的人看到你的作品..</span>
 			</div>
-		</div>		
-			<form name="mform" method="post" action="__URL__/save"
-				class="formclass longform">
-				<h1>增 加 分 类</h1>
-				<table width="100%" border="0" cellspacing="1" cellpadding="0">
-					<tr>
-						<th>所属分类：</th>
-						<td><select name="root_id" id="root_id" class="sel"><option
-									value="0">作为顶级分类</option>{$category_option}
-						</select><a href="__URL__/lists"> 分类编辑</a></td>
-					</tr>
-					<tr>
-						<th>分类名称：</th>
-						<td><input name="cate_name" type="text" class="ipt"
-							id="cate_name" size="35" maxlength="50" /> <input
-							name="cate_isbest" type="checkbox" id="cate_isbest" value="1" /><label
-							for="cate_isbest">设为推荐</label></td>
-					</tr>
-					<tr>
-						<th>关 键 词：</th>
-						<td><input name="cate_keywords" type="text" class="ipt"
-							id="cate_keywords" size="50" maxlength="255" placeholder="多个关键词之间用“逗号”隔开"/><span
-							class="tips"></span></td>
-					</tr>
-					<tr>
-						<th class="table">分类描述：</th>
-						<td><textarea name="cate_description" cols="50" rows="6"
-								class="ipt" id="cate_description"></textarea></td>
-					</tr>
-					<tr>
-						<th>排列顺序：</th>
-						<td><input name="cate_order" type="text" class="ipt"
-							id="cate_order" size="10" maxlength="10" /></td>
-					</tr>
-					<tr class="btnbox">
-						<td>&nbsp;</td>
-						<td><input type="submit" class="btn" value="保 存" />&nbsp; <input
-							type="reset" class="btn" value="取 消" /></td>
-					</tr>
-				</table>
-			</form>
-<include file="Public:footer" />
 		</div>
+		<include file="Public:category_form" />
+		<include file="Public:footer" />
+	</div>	
 </body>
 </html>

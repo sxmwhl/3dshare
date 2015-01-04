@@ -39,7 +39,7 @@
 			</div>
 		</div>
 		<div class="InfoOrange">
-			<div class="InfoDesc">创造者</div>
+			<div class="InfoDesc">创作者</div>
 			<div id="Date" class="InfoValue">
 				<?php echo $model['creator']; ?>
 			</div>
@@ -68,8 +68,7 @@
 				<?php echo "<img src='__PUBLIC__/upload/" . $model['folder'] . "/preview." . $model['preview_ext'] . "' alt='" . $model['title'] . "' />"?>
 			</div>
 		</div>
-		<a href="__MODULE__/form/modify?f={$model['folder']}&cate={$model['category']}" target="_parent"><div
-				class="button blue">修改信息</div></a>
+		<a href="__MODULE__/form/modify?f={$model['folder']}&cate={$model['category']}" target="_parent"><div class="button blue">修改信息</div></a>
 	</div>
 	</aside>
 	<iframe id="Content3D" class="Content3D"
