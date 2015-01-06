@@ -129,7 +129,7 @@ class FormController extends Controller {
     		$Moxing->where($where)->save();
     	}
     	//echo $Moxing->getLastSql(); //最后运行sql语句
-    	header("Location:".__ROOT__."/Home/index/model?f=".$inputs['folder']);
+    	header("Location:".__MODULE__."/index/model?f=".$inputs['folder']);
     	//$this->display('public:jump');
     }
 }

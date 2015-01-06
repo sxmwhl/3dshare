@@ -7,13 +7,13 @@ class MoxingModel extends Model {
 	//自动验证
 	protected $_validate    =   array(
 			array('title','require','请为模型命名！'),
-			array('title','50','模型名称过长！',0,'length'),
+			array('title','0,50','模型名称需要精简一些！',0,'length'),
 			array('description','require','请对模型进行描述！'),
-			array('description','300','模型名称过长！',0,'length'),
+			array('description','0,300','模型描述过长！',0,'length'),
 			array('category','require','请为模型选择分类！'),
 			array('category','number','分类数据类型必须为数字！'),
-			array('email','email','邮箱格式不正确！'),
-			array('email','30','邮箱名称过长！',0,'length'),			
+			array('email','email','邮箱格式不正确！',2),
+			array('email','0,30','邮箱名称过长！',2,'length'),	
 	);
 	// 定义自动完成
 	protected $_auto    =   array(

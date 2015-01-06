@@ -1,3 +1,5 @@
-git log 查看commit    
-git reset --hard <commit_id> //删除命令
-git push origin HEAD --force //强制push
+锘縢it log 鏌ョ湅commit    
+git reset --hard <commit_id> //鍒犻櫎鍛戒护
+git push origin HEAD --force //寮哄埗push
+
+composer update
