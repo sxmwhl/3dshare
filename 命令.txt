@@ -3,3 +3,17 @@ git reset --hard <commit_id> //删除命令
 git push origin HEAD --force //强制push
 
 composer update
+
+修改git的gitconfig文件的http>>postbuffer = 558288000
+
+3dmax 减少面 
+修改器>>ProOptimizer>>计算>>减少顶点%
+
+github 添加tag
+git tag -a v1.0 -m '版本说明'
+共享（发布）tag
+git push origin --tags
+新建一个叫develop的分支，基于master分支
+git branch develop master
+切换分支
+git checkout develop
